@@ -1,5 +1,5 @@
 import React from "react";
-import TextField from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 
 const TextInput = (props) => {
   return (
@@ -12,6 +12,7 @@ const TextInput = (props) => {
       rows={props.rows}
       value={props.value}
       type={props.type}
+      onChange={props.onChange}
     />
   )
 }

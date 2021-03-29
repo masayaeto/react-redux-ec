@@ -13,6 +13,7 @@ export const signInAction = (userState) => {
 
 export const SIGN_OUT = "SIGN_OUT";
 export const signOutAction = () => {
+  console.log("aaaaaaaaaaaa")
   return {
     type: "SIGN_OUT",
     payload: {

@@ -2,17 +2,18 @@ import React, {useCallback, useState} from "react";
 import {signIn} from "../reducks/users/operation"
 import {TextInput, PrimaryButton} from "../components/UIkit";
 import {useDispatch} from "react-redux";
+import { push } from "connected-react-router";
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState(""),
         [password, setPassword] = useState("");
 
-  const inputEmail = useCallback((e) => {
+  const inputEmail = useCallback((e) => {//useCallbackでメモ化
     setEmail(e.target.value)
   }, [setEmail]);
 
-  const inputPassword = useCallback((e) => {
+  const inputPassword = useCallback((e) => {//useCallbackでメモ化
     setPassword(e.target.value)
   }, [setPassword]);
   
@@ -34,6 +35,9 @@ const SignIn = () => {
           label={"サインイン"}
           onClick={() => {dispatch(signIn(email,password))}}
         />
+        <div className="module-spacer--medium"/>
+        <p onClick={() => dispatch(push("/signup"))}>アカウントをお持ちでない方はこちら</p>
+        <p onClick={() => dispatch(push("/signin/reset"))}>パスワードを忘れた方はこちら</p>
       </div>
     </div>
   )

@@ -18,8 +18,6 @@ export const listenAuthState  = () => {
                 uid: uid,
                 username: data.username
               }))
-              console.log("test")
-              dispatch(push("/"))
             })
       }else{
         dispatch(push("/signin"))

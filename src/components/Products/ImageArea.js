@@ -15,11 +15,19 @@ const useStyles = makeStyles({
 
 const ImageArea = (props) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const images = props.images;
+
+  const deleteImage = useCallback( async (id) => {
+    const ret = window.confirm("この画像を本当に削除しますか？");
+    if(!ret){
+      return false
+    }else{
+      const newImages = props.images.filter(image => image.id !== id)
+      props.setImages(newImages);
+      return storage.ref("images").child(id).delete()
+    }
+  }, [props.images])
 
   const uploadImage = useCallback((event) => {
-      dispatch(showLoadingAction("uploading..."))
       const file = event.target.files;
       let blob = new Blob(file, { type: "image/jpeg" });
 
@@ -36,18 +44,17 @@ const ImageArea = (props) => {
           uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
               const newImage = {id: fileName, path: downloadURL};
               props.setImages((prevState => [...prevState, newImage]))
-              dispatch(hideLoadingAction())
           });
       }).catch(() => {
-          dispatch(hideLoadingAction())
+          //dispatch(hideLoadingAction())
       });
   }, [props.setImages])
 
   return (
       <div>
           <div className="p-grid__list-images">
-              {images.length > 0 && (
-                  images.map(image => <ImagePreview delete={deleteImage} id={image.id} path={image.path} key={image.id} /> )
+              {props.images.length > 0 && (
+                  props.images.map(image => <ImagePreview delete={deleteImage} id={image.id} path={image.path} key={image.id} /> )
               )}
           </div>
           <div className="u-text-right">

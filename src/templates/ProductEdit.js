@@ -1,17 +1,26 @@
 import { SettingsEthernet } from "@material-ui/icons";
-import React, {useState, useCallback} from "react";
+import React, {useState, useCallback, useEffect} from "react";
 import { useDispatch } from "react-redux";
 import {TextInput, SelectBox, PrimaryButton} from "../components/UIkit";
 import {saveProduct} from "../reducks/products/operation";
 import ImageArea from "../components/Products/ImageArea";
+import {db} from "../firebase/index";
 
 const ProductEdit = () => {
   const dispatch = useDispatch();
+  let id = window.location.pathname.split("/product/edit")[1];
+  console.log("Before", id);
+
+  if(id !== ""){
+    id = id.split("/")[1]
+    console.log("After", id)
+  }
 
   const [name, setName] = useState(""),
         [description, setDescription] = useState(""),
         [category, setCategory] = useState(""),
         [gender, setGender] = useState(""),
+        [images, setImages] = useState([]),
         [price, setPrice] = useState("");
 
   const inputName = useCallback((e) => {
@@ -38,11 +47,26 @@ const ProductEdit = () => {
     {id: "female",name: "レディース"}
   ]
 
+  useEffect( () => {
+    if(id !== ""){
+      db.collection("products").doc(id).get()
+      .then(snapshot => {
+          const data = snapshot.data();
+          setImages(data.images);
+          setName(data.name);
+          setDescription(data.description);
+          setCategory(data.category);
+          setGender(data.gender);
+          setPrice(data.price);
+        })
+    }
+  }, [id])
+
   return (
     <section>
       <h2 className="u-text__headline u-text-center">商品の登録・編集</h2>
       <div className="c-section-container">
-        <ImageArea/>
+        <ImageArea images={images} setImages={setImages}/>
         <TextInput 
           fullWidth={true} label={"商品名"} multiline={false} required={true}
           onChange={inputName} rows={1} value={name} type={"text"}       
@@ -60,7 +84,7 @@ const ProductEdit = () => {
         <div className="center">
           <PrimaryButton 
             label={"商品情報を保存"} 
-            onClick={() => dispatch(saveProduct(name,description, category, gender, price))}
+            onClick={() => dispatch(saveProduct(id, name,description, category, gender, price, images))}
           />
         </div>
       </div>

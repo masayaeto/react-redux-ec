@@ -3,7 +3,6 @@ import IconButton from "@material-ui/core/IconButton";
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { makeStyles } from "@material-ui/core";
 import {storage} from "../../firebase/index";
-import {useDispatch} from "react-redux";
 import ImagePreview from "./ImegaePreview";
 
 const useStyles = makeStyles({
